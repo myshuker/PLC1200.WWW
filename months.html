@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <title>Chart</title>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="index.html">DAYS</a>
+          <!--  <a class="navbar-brand" href="#">WEEKS</a>  --> 
+            <a class="navbar-brand" href="months.html">MONTHS</a>
+          </div>
+        </div>
+      </nav>
+      <canvas id="chart"></canvas>
+    </div>
+
+    <script>
+      // global variable
+      const xlabels =  ["Januar", "Februar", "Marts","April",  "Maj", "Juni", "Juli", "August", "September", "Oktober", "November", "December"];
+      const ylabels = [];
+
+      // createing chart
+      const ctx = document.getElementById("chart").getContext("2d");
+      const myChart = new Chart(ctx, {
+        type: "line", // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+        data: {
+          labels: xlabels,
+          datasets: [
+            {
+              label: "Show ",
+              data: ylabels,              
+              borderColor: "blue",
+              borderWidth: 1,
+              fill: false,
+            },
+          ],
+        },
+
+        options: {
+          title: {
+            display: true,
+            text: "Personer antal i månder",
+            fontSize: 25,
+            fontColor: "blue",
+          },
+          legend: {
+            display: true,
+           // position: "right",
+            labels: {
+              fontColor: "#000",
+            },
+          },
+          layout: {
+            padding: {
+              left: 50,
+              right: 0,
+              bottom: 0,
+              top: 60,
+            },
+          },
+        },
+      });
+
+      // fetch datat from CSV file
+      getData();
+      async function getData() {
+        const Response = await fetch("loggingDB.csv");
+        const data = await Response.text();
+        //console.log(data);
+
+        const table = data.split("\n").slice(1);
+        table.forEach((row) => {
+          //console.log(row)
+          const col = row.split(",");
+          const day = col[2];
+        //  xlabels.push(day);
+          //const temp = 14 + parseFloat(col[1]);
+          const person = col[3];
+          ylabels.push(person);
+          console.log(day, person);
+        });
+        //console.log(table)
+      }
+    </script>
+  </body>
+</html>
